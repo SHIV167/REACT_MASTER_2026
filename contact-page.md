@@ -358,3 +358,151 @@ I can:
 5️⃣ Send preview data to EmailJS
 
 Just say what you want next 👍
+
+🧠 Goal
+
+👉 Whatever user types in the Contact form:
+
+Save it to localStorage
+
+Restore it when the page reloads
+
+Keep React as the single source of truth
+
+🔑 Key React Concepts Used
+Concept	Why
+useState	Hold form data
+useEffect	Sync state ↔ localStorage
+Controlled inputs	Reliable data flow
+JSON stringify / parse	localStorage only stores strings
+1️⃣ Read From localStorage (On Page Load)
+Initialize state from localStorage
+const [formData, setFormData] = useState(() => {
+  const savedData = localStorage.getItem("contactForm");
+  return savedData
+    ? JSON.parse(savedData)
+    : { name: "", email: "", message: "" };
+});
+
+Why this pattern?
+
+Runs only once on initial render
+
+Prevents unnecessary reads
+
+Best practice for performance
+
+2️⃣ Save To localStorage (Whenever Data Changes)
+Use useEffect
+useEffect(() => {
+  localStorage.setItem("contactForm", JSON.stringify(formData));
+}, [formData]);
+
+What this means
+
+Every time formData updates
+
+React automatically saves it
+
+No manual button needed
+
+3️⃣ Input Change Handler (Same as Before)
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
+4️⃣ Complete Contact Component (Clean Version)
+import { useState, useEffect } from "react";
+
+const Contact = () => {
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem("contactForm");
+    return savedData
+      ? JSON.parse(savedData)
+      : { name: "", email: "", message: "" };
+  });
+
+  useEffect(() => {
+    localStorage.setItem("contactForm", JSON.stringify(formData));
+  }, [formData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <>
+      <form>
+        <input
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+
+        <input
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+
+        <textarea
+          name="message"
+          placeholder="Message"
+          value={formData.message}
+          onChange={handleChange}
+        />
+      </form>
+
+      {/* Preview */}
+      <div className="form-preview">
+        <h3>Saved Preview</h3>
+        <p><strong>Name:</strong> {formData.name}</p>
+        <p><strong>Email:</strong> {formData.email}</p>
+        <p><strong>Message:</strong> {formData.message}</p>
+      </div>
+    </>
+  );
+};
+
+export default Contact;
+
+🎯 What You Achieved
+
+✅ Data persists after refresh
+✅ No backend needed
+✅ React controls everything
+✅ Works instantly
+
+⚠️ Important Notes (Interview Gold)
+❌ Don’t store sensitive data
+
+Passwords
+
+OTPs
+
+Payment info
+
+✅ Good use cases
+
+Contact drafts
+
+Theme preferences
+
+Filters
+
+Form recovery
+
+🧠 React Interview Explanation (Say This)
+
+“I use useEffect to synchronize React state with localStorage.
+The state initializes from localStorage once and persists automatically on change.
