@@ -421,3 +421,113 @@ button:disabled {
 All previous features remain: validation, disabled button while submitting, reusable component.
 
 LocalStorage stores each submission as an array under "contactForms".
+
+
+add a view submitted messages list right below the form if you want to see saved data live.
+Modern React Contact Form (no State)
+· typescript
+import React, { useState, useEffect } from "react";
+
+
+  return (
+    <div className="page">
+      <form className="form" onSubmit={handleSubmit} noValidate>
+        <h2 className="title">Contact Us</h2>
+
+
+        <div className="row">
+          <div className="field">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Your name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+            {errors.name && <span className="error">{errors.name}</span>}
+          </div>
+
+
+          <div className="field">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {errors.email && <span className="error">{errors.email}</span>}
+          </div>
+        </div>
+
+
+        <div className="field">
+          <label>Message</label>
+          <textarea
+            rows="4"
+            name="message"
+            placeholder="Write your message..."
+            value={formData.message}
+            onChange={handleChange}
+          />
+          {errors.message && <span className="error">{errors.message}</span>}
+        </div>
+
+
+        <button type="submit" disabled={submitting}>
+          {submitting ? "Sending..." : "Send Message"}
+        </button>
+      </form>
+
+
+      {/* Submitted Messages List */}
+      {submittedData.length > 0 && (
+        <div className="submitted-list">
+          <h3>Submitted Messages</h3>
+          <ul>
+            {submittedData.map((item, index) => (
+              <li key={index} className="submitted-item">
+                <strong>{item.name}</strong> ({item.email}):<br />
+                {item.message}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+/* ContactForm.css additions */
+.submitted-list {
+  margin-top: 24px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 100%;
+}
+
+
+.submitted-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+
+.submitted-item:last-child {
+  border-bottom: none;
+}
+
+
+
+✅ Done! The form now includes a live view of submitted messages below it:
+
+Submissions are saved in localStorage
+
+Displayed immediately after submission
+
+Still includes validation, disabled button while submitting, and reusable component features
