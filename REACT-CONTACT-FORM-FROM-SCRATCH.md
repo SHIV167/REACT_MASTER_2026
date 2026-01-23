@@ -329,3 +329,95 @@ Disable button while submitting with a “Sending…” indicator
 Accepts a custom onSubmit prop for API integration or parent handling
 
 Still clean, Flexbox-based, and controlled inputs
+
+
+
+save data in localstorage and clean
+Modern React Contact Form (no State)
+· typescript
+import React, { useState } from "react";
+
+
+/* ContactForm.css */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f2f2;
+}
+
+
+.form {
+  background: #fff;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 12px;
+}
+
+
+.title {
+  text-align: center;
+}
+
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+
+.field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+
+label {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+
+input,
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+
+
+✅ Updated: The form now saves submitted data to localStorage and clears the form after submission.
+
+All previous features remain: validation, disabled button while submitting, reusable component.
+
+LocalStorage stores each submission as an array under "contactForms".
