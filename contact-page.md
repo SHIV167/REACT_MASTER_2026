@@ -506,3 +506,170 @@ Form recovery
 
 “I use useEffect to synchronize React state with localStorage.
 The state initializes from localStorage once and persists automatically on change.
+
+
+1️⃣ Clear localStorage After Submit
+🧠 Idea
+
+When the user clicks Submit:
+
+Send data (later: API / EmailJS)
+
+Clear React state
+
+Clear localStorage
+
+Reset form UI
+
+✅ Submit Handler
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  // simulate submit (API / email)
+  console.log("Submitted Data:", formData);
+
+  // clear localStorage
+  localStorage.removeItem("contactForm");
+
+  // reset state
+  setFormData({
+    name: "",
+    email: "",
+    message: "",
+  });
+};
+
+🔗 Attach to Form
+<form onSubmit={handleSubmit}>
+
+
+Now:
+
+Submit → clears everything
+
+Page refresh → empty form
+
+Preview resets automatically
+
+2️⃣ Add Expiry to localStorage Data
+
+localStorage has no built-in expiry, so we create one.
+
+🧠 Expiry Strategy (Simple & Clean)
+
+Store:
+
+{
+  data: { name, email, message },
+  expiry: timestamp
+}
+
+
+Then:
+
+On load → check expiry
+
+If expired → delete it
+
+⏳ Expiry Time Example
+
+Let’s set:
+👉 1 hour expiry
+
+const EXPIRY_TIME = 60 * 60 * 1000; // 1 hour
+
+🏗️ Save With Expiry (useEffect)
+useEffect(() => {
+  const item = {
+    data: formData,
+    expiry: Date.now() + EXPIRY_TIME,
+  };
+
+  localStorage.setItem("contactForm", JSON.stringify(item));
+}, [formData]);
+
+🔄 Load With Expiry Check (Important)
+const [formData, setFormData] = useState(() => {
+  const saved = localStorage.getItem("contactForm");
+  if (!saved) return { name: "", email: "", message: "" };
+
+  const parsed = JSON.parse(saved);
+
+  if (Date.now() > parsed.expiry) {
+    localStorage.removeItem("contactForm");
+    return { name: "", email: "", message: "" };
+  }
+
+  return parsed.data;
+});
+
+🧩 Full Clean Contact Logic (Final Version)
+import { useState, useEffect } from "react";
+
+const EXPIRY_TIME = 60 * 60 * 1000; // 1 hour
+
+const Contact = () => {
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem("contactForm");
+    if (!saved) return { name: "", email: "", message: "" };
+
+    const parsed = JSON.parse(saved);
+    if (Date.now() > parsed.expiry) {
+      localStorage.removeItem("contactForm");
+      return { name: "", email: "", message: "" };
+    }
+
+    return parsed.data;
+  });
+
+  useEffect(() => {
+    const item = {
+      data: formData,
+      expiry: Date.now() + EXPIRY_TIME,
+    };
+    localStorage.setItem("contactForm", JSON.stringify(item));
+  }, [formData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitted:", formData);
+
+    localStorage.removeItem("contactForm");
+    setFormData({ name: "", email: "", message: "" });
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <input name="name" value={formData.name} onChange={handleChange} />
+        <input name="email" value={formData.email} onChange={handleChange} />
+        <textarea name="message" value={formData.message} onChange={handleChange} />
+        <button type="submit">Send</button>
+      </form>
+
+      <div className="form-preview">
+        <h3>Live Preview</h3>
+        <p>{formData.name}</p>
+        <p>{formData.email}</p>
+        <p>{formData.message}</p>
+      </div>
+    </>
+  );
+};
+
+export default Contact;
+
+🧠 How You Explain This in Interview
+
+“I implemented localStorage persistence with expiry using timestamps.
+On submit, I clear both state and storage to avoid stale data.”
+
+This sounds mid–senior level instantly.
