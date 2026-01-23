@@ -87,3 +87,134 @@ button {
   color: #fff;
   cursor: pointer;
 }
+
+
+
+second steps start here
+
+
+Modern React Contact Form (no State)
+· typescript
+import React, { useState } from "react";
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+
+        <div className="field">
+          <label>Message</label>
+          <textarea
+            rows="4"
+            name="message"
+            placeholder="Write your message..."
+            value={formData.message}
+            onChange={handleChange}
+          />
+        </div>
+
+
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  );
+}
+
+
+/* ContactForm.css */
+
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f2f2;
+}
+
+
+.form {
+  background: #fff;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 12px;
+}
+
+
+.title {
+  text-align: center;
+}
+
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+
+.field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+
+label {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+
+input,
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+
+Done ✅
+
+I’ve added useState + proper submit handling while keeping everything clean and Flexbox-only:
+
+What’s included now:
+
+✔ useState for name, email, message
+
+✔ Single handleChange for all inputs
+
+✔ handleSubmit with preventDefault()
+
+✔ Console submit demo
+
+✔ Optional form reset after submit
+
+✔ Still no validation, no extra logic
+
+This is now a real controlled form and ready for:
+
+API call (fetch / axios)
+
+Email service (EmailJS, Formspree)
+
+Validation (when you want)
+
+Loading / success UI
